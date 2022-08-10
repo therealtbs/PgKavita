@@ -3,7 +3,8 @@ set -eou pipefail
 
 
 TAG=${1}
-DOCKER_IMAGE="ghcr.io/therealtbs/pgkavita:${TAG#v}";
+DOCKER_IMAGE="ghcr.io/therealtbs/pgkavita";
+DOCKER_TAG="${TAG#v}"
 
 function section() {
     echo '';
@@ -34,4 +35,10 @@ done
 
 section 'Dockering';
 
-docker buildx build -t "${DOCKER_IMAGE}" --platform linux/amd64,linux/arm/v7,linux/arm64 . --push;
+ADDITIONAL_TAGS="";
+
+if [[ -n "${2-}" ]]; then
+    ADDITIONAL_TAGS="-t ${DOCKER_IMAGE}:${2}"
+fi
+
+docker buildx build -t "${DOCKER_IMAGE}:${TAG#v}" ${ADDITIONAL_TAGS} --platform linux/amd64,linux/arm/v7,linux/arm64 . --push;
