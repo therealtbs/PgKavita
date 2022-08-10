@@ -1,0 +1,14 @@
+diff --git a/API/Extensions/ApplicationServiceExtensions.cs b/API/Extensions/ApplicationServiceExtensions.cs
+index 1b637b25..85d4c151 100644
+--- a/API/Extensions/ApplicationServiceExtensions.cs
++++ b/API/Extensions/ApplicationServiceExtensions.cs
+@@ -66,7 +66,8 @@ namespace API.Extensions
+         {
+             services.AddDbContext<DataContext>(options =>
+             {
+-                options.UseSqlite(config.GetConnectionString("DefaultConnection"));
++                System.AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
++                options.UseNpgsql(config.GetConnectionString("DefaultConnection"));
+                 options.EnableDetailedErrors();
+                 options.EnableSensitiveDataLogging(env.IsDevelopment() || Configuration.LogLevel.Equals("Debug"));
+             });

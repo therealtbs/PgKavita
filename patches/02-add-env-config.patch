@@ -1,0 +1,13 @@
+diff --git a/API/Program.cs b/API/Program.cs
+index 3bd89535..413deec2 100644
+--- a/API/Program.cs
++++ b/API/Program.cs
+@@ -135,6 +135,8 @@ namespace API
+                     config.AddJsonFile("config/appsettings.json", optional: true, reloadOnChange: false)
+                         .AddJsonFile($"config/appsettings.{env.EnvironmentName}.json",
+                             optional: true, reloadOnChange: false);
++
++                    config.AddEnvironmentVariables();
+                 })
+                 .ConfigureWebHostDefaults(webBuilder =>
+                 {

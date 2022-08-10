@@ -1,0 +1,33 @@
+diff --git a/Dockerfile b/Dockerfile
+index 7233214f..15438d6d 100644
+--- a/Dockerfile
++++ b/Dockerfile
+@@ -16,6 +16,7 @@ RUN /copy_runtime.sh
+ FROM ubuntu:focal
+ 
+ COPY --from=copytask /Kavita /kavita
++COPY --from=copytask /DataMigrationTool /migration
+ COPY --from=copytask /files/wwwroot /kavita/wwwroot
+ 
+ #Installs program dependencies
+diff --git a/entrypoint.sh b/entrypoint.sh
+index 53bed162..577079e6 100644
+--- a/entrypoint.sh
++++ b/entrypoint.sh
+@@ -26,6 +26,14 @@ if [ ! -f "/kavita/config/appsettings.json" ]; then
+ }' >> /kavita/config/appsettings.json
+ fi
+ 
++if [ -f /kavita/config/kavita.db ]; then
++    echo "Found SQLite DB, migrating data";
++    if ! /migration/DataMigrationTool; then
++        echo "Migration failed, entering sleep loop";
++        while true; do sleep 10000000; done
++    fi
++fi
++
+ chmod +x Kavita
+ 
+-./Kavita
+\ No newline at end of file
++./Kavita

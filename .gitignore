@@ -1,0 +1,8 @@
+workspace/
+changedMigrations/*
+!changedMigrations/.gitkeep
+.vscode
+DataMigrationTool/bin
+DataMigrationTool/obj
+DataMigrationTool/config
+_output

@@ -1,0 +1,30 @@
+version: "3"
+volumes:
+  kavita_config:
+  books:
+services:
+  postgres:
+    image: postgres:14
+    ports:
+      - "5002:5432"
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: kavita
+  kavita:
+    image: ghcr.io/therealtbs/pgkavita:0.5.4
+    ports:
+      - "5000:5000"
+    environment:
+      PGUSER: kavita
+      PGPASSWORD: example
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432"
+    volumes:
+      - ./DataMigrationTool/config:/kavita/config
+      - books:/books
+  filebrowser:
+    image: filebrowser/filebrowser
+    ports:
+      - "5001:80"
+    volumes:
+      - books:/srv/books
+      - kavita_config:/srv/kavita
