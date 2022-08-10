@@ -66,14 +66,15 @@ using (var listTablesCommand = sqliteConn.CreateCommand()){
 }
 var tablesToMigrate = sqliteTables.Intersect(pgTables);
 
+foreach (var table in tablesToMigrate) {
+    await pgConn.SetConstraintsDeferred(table, true);
+}
 var transaction = await pgConn.BeginTransactionAsync();
 try {
     foreach (var table in tablesToMigrate) {
         Console.WriteLine($"Migrating data for table {table}");
         var data = await sqliteConn.GetAllData(table);
-        await pgConn.SetTriggers(table, false);
         await pgConn.WriteAllData(table, data);
-        await pgConn.SetTriggers(table, true);
     }
     await transaction.CommitAsync();
 } catch (Exception ex) {
@@ -81,6 +82,10 @@ try {
     throw ex;
 } finally {
     await transaction.DisposeAsync();
+    
+    foreach (var table in tablesToMigrate) {
+        await pgConn.SetConstraintsDeferred(table, false);
+    }
 }
 
 var sqliteSequences = await sqliteConn.GetAllData("sqlite_sequence");

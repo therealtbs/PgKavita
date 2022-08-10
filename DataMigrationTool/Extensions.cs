@@ -23,10 +23,20 @@ namespace PgKavita.DataMigrationTool
             return list;
         }
 
-        public static async Task SetTriggers(this DbConnection conn, string table, bool state)
+        public static async Task SetConstraintsDeferred(this DbConnection conn, string table, bool deferred)
         {
+            var constraintChanges = new List<string>();
+            using (var constraints = await conn.GetSchemaAsync("ForeignKeys", new string[] { "", "", table })) {
+                for (var i = 0; i < constraints.Rows.Count; i++) {
+                     constraintChanges.Add($"ALTER CONSTRAINT \"{(constraints.Rows[i]["CONSTRAINT_NAME"])}\" {(deferred ? "DEFERRABLE INITIALLY DEFERRED" : "NOT DEFERRABLE")}");
+                }
+            }
+            if (constraintChanges.Count == 0) {
+                return;
+            }
+            
             var cmd = conn.CreateCommand();
-            cmd.CommandText = $"ALTER TABLE \"{table}\" {(state ? "ENABLE" : "DISABLE")} TRIGGER all;";
+            cmd.CommandText = $"ALTER TABLE \"{table}\" {String.Join(", ", constraintChanges)};";
             await cmd.ExecuteNonQueryAsync();
         }
 
