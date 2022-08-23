@@ -16,6 +16,7 @@ cd workspace;
 
 section 'Building App';
 
+cp API/config/appsettings.Development.json API/config/appsettings.json;
 ./build.sh;
 
 pushd ../DataMigrationTool;
