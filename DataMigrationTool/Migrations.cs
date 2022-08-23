@@ -87,6 +87,11 @@ namespace PgKavita.DataMigrationTool {
             "20220613131302_GlobalPageLayoutModeUserSetting",
             "20220615190640_LastFileAnalysis",
             "20220625215526_BlurUnreadSummaries",
+            "20220712161611_PromptForDownloadSizeUserOption",
+            "20220717145254_UserConfirmationLink",
+            "20220728193758_WantToReadList",
+            "20220802222910_BookmarkHasDate",
+            "20220814134725_MangaFileCreatedDate",
         };
     }
 }
