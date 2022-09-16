@@ -92,6 +92,8 @@ namespace PgKavita.DataMigrationTool {
             "20220728193758_WantToReadList",
             "20220802222910_BookmarkHasDate",
             "20220814134725_MangaFileCreatedDate",
+            "20220817173731_SeriesFolder",
+            "20220819223212_NormalizedLocalizedName",
         };
     }
 }
