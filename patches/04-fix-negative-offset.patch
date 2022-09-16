@@ -1,0 +1,16 @@
+diff --git a/API/Helpers/PagedList.cs b/API/Helpers/PagedList.cs
+index b87687a6..c8e4e239 100644
+--- a/API/Helpers/PagedList.cs
++++ b/API/Helpers/PagedList.cs
+@@ -26,8 +26,8 @@ namespace API.Helpers
+         {
+             // NOTE: OrderBy warning being thrown here even if query has the orderby statement
+             var count = await source.CountAsync();
+-            var items = await source.Skip((pageNumber - 1) * pageSize).Take(pageSize).ToListAsync();
++            var items = await source.Skip(Math.Max((pageNumber - 1) * pageSize, 0)).Take(pageSize).ToListAsync();
+             return new PagedList<T>(items, count, pageNumber, pageSize);
+         }
+     }
+-}
+\ No newline at end of file
++}
